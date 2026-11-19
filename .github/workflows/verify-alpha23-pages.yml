@@ -1,0 +1,55 @@
+name: Verify Alpha 23 binary and publish Pages update feed
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verify-alpha23-pages.yml"
+      - "stable/NetworkMonitor-alpha23.exe"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-and-publish:
+    if: ${{ github.repository == 'darrtah/network-monitor-releases' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify exact publicly uploaded EXE bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=c7e72a34e0943056255c74f276919c2ada26b4b94448d43e992eb08217d7dcc6
+          file=stable/NetworkMonitor-alpha23.exe
+          test -f "$file"
+          test "$(wc -c < "$file" | tr -d ' ')" = 3273216
+          actual=$(sha256sum "$file" | cut -d' ' -f1)
+          echo "Binary sha256=$actual"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Public EXE does not match trusted private CI build"
+            exit 1
+          fi
+      - name: Publish verified update manifest last
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p updates
+          cat > updates/stable.txt <<'EOF'
+          alpha=23
+          url=https://darrtah.github.io/network-monitor-releases/stable/NetworkMonitor-alpha23.exe
+          sha256=c7e72a34e0943056255c74f276919c2ada26b4b94448d43e992eb08217d7dcc6
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add updates/stable.txt
+          if git diff --cached --quiet; then
+            echo 'Manifest already up to date.'
+          else
+            git commit -m 'Publish verified Alpha 23 GitHub Pages update feed'
+            git push origin HEAD:main
+          fi
