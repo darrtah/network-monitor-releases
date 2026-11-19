@@ -1,3 +1,3 @@
-alpha=43
-url=https://darrtah.github.io/network-monitor-releases/stable/NetworkMonitor-alpha43.exe
-sha256=96a3920157c5a53b94e90fbe6beaf63ab4612406c71262cd00941f699490a794
+alpha=44
+url=https://darrtah.github.io/network-monitor-releases/stable/NetworkMonitor-alpha44.exe
+sha256=976277a4fe7f12d1d1d3a009501614df0c9e6d66761c1ef823a77d483a03e697
