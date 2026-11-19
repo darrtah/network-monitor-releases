@@ -14,11 +14,11 @@ This public repository contains only the binary update channel. Source and the W
 
 1. In the **private** source repo, run the Windows build workflow on `feature/network-only`.
 2. Confirm every build and updater test passed.
-3. Download the matching `NetworkMonitor-alphaNN-win-x64` artifact from the successful private CI run.
-4. Extract the archive on your Windows PC.
+3. Download the matching `NetworkMonitor-alphaNN-pages-ready` artifact from the successful private CI run.
+4. Extract the archive on your Windows PC. The EXE already has the correct versioned filename.
 5. Confirm `NetworkMonitor.exe`, `LICENSE`, `NOTICE.md`, `README.txt` exist.
 6. Run `Get-FileHash .\NetworkMonitor.exe -Algorithm SHA256` in PowerShell. Record the lowercase 64-digit digest.
-7. Rename a **copy** of the executable to `NetworkMonitor-alphaNN.exe`. Do not change its contents.
+7. Keep the supplied `NetworkMonitor-alphaNN.exe` filename unchanged. Do not modify its contents.
 8. Upload that copy to public `stable/` using GitHub → Add file → Upload files. Do not overwrite an old version.
 9. Upload LICENSE and NOTICE.md with each release, or retain them as public files; do not omit license attribution.
 10. Confirm direct anonymous download from `https://darrtah.github.io/network-monitor-releases/stable/NetworkMonitor-alphaNN.exe`.
